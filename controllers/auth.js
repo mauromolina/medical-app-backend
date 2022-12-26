@@ -47,11 +47,13 @@ const login = async (req, res) => {
         ok: false,
         msg: "Email o contraseña incorrectos.",
       });
+    console.log({ user });
     const token = await generateJwt(user.id, user.name);
     res.status(200).json({
       ok: true,
       msg: "User logged",
       user,
+      uid: user.id,
       token,
     });
   } catch (err) {
@@ -70,6 +72,7 @@ const refreshToken = async (req, res) => {
     res.status(200).json({
       ok: true,
       msg: "Token refreshed",
+      user: { uid, name },
       token,
     });
   } catch (err) {

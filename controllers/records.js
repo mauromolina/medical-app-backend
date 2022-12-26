@@ -1,8 +1,12 @@
 const Record = require("../models/Record");
 
 const getRecords = async (req, res) => {
+  const userId = req.uid;
   try {
-    const records = await Record.find().populate("user", "name");
+    const records = await Record.find({ user: userId }).populate(
+      "user",
+      "name"
+    );
     res.status(200).json({
       ok: true,
       records,

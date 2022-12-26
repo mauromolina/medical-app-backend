@@ -8,7 +8,9 @@ const validateJwt = (req, res, next) => {
       msg: "Acceso denegado. Se necesita token",
     });
   try {
-    const { uid, name } = jwt.verify(token, process.env.SECRET_JWT);
+    const data = jwt.verify(token, process.env.SECRET_JWT);
+    console.log({ data });
+    const { uid, name } = data;
     req.uid = uid;
     req.name = name;
   } catch (err) {

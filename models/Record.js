@@ -8,8 +8,16 @@ const RecordSchema = Schema({
   notes: {
     type: String,
   },
-  createdAt: {
+  start: {
     type: Date,
+    required: true,
+  },
+  end: {
+    type: Date,
+    required: true,
+  },
+  category: {
+    type: String,
     required: true,
   },
   user: {
