@@ -100,7 +100,7 @@ const deleteRecord = async (req, res) => {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error al eliminar registro",
+      msg: "Error en el servidor al eliminar registro. Intente nuevamente.",
     });
   }
 };
