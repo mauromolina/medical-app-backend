@@ -9,7 +9,7 @@ const newUser = async (req, res) => {
     if (emailInUse) {
       return res.status(400).json({
         ok: false,
-        msg: "El email ya está en uso",
+        code: "EMAIL_ALREADY_EXISTS",
       });
     }
     const user = new User(req.body);
@@ -19,15 +19,16 @@ const newUser = async (req, res) => {
     const token = await generateJwt(user.id, user.name);
     res.status(201).json({
       ok: true,
-      msg: "User created",
       user,
+      uid: user.id,
       token,
+      code: "USER_CREATED",
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error al crear nuevo usuario",
+      code: "REGISTER_SERVER_ERROR",
     });
   }
 };
@@ -39,28 +40,27 @@ const login = async (req, res) => {
     if (!user)
       return res.status(400).json({
         ok: false,
-        msg: "El usuario o email no existe",
+        code: "USR_NOT_EXISTS",
       });
     const isValidPassword = bcrypt.compareSync(password, user.password);
     if (!isValidPassword)
       return res.status(400).json({
         ok: false,
-        msg: "Email o contraseña incorrectos.",
+        code: "LOGIN_INVALID_CREDENTIALS",
       });
-    console.log({ user });
     const token = await generateJwt(user.id, user.name);
     res.status(200).json({
       ok: true,
-      msg: "User logged",
       user,
       uid: user.id,
       token,
+      code: "LOGIN_SUCCESSFUL",
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error al iniciar sesión",
+      code: "LOGIN_SERVER_ERROR",
     });
   }
 };
@@ -71,7 +71,6 @@ const refreshToken = async (req, res) => {
     const token = await generateJwt(uid, name);
     res.status(200).json({
       ok: true,
-      msg: "Token refreshed",
       user: { uid, name },
       token,
     });
@@ -79,7 +78,7 @@ const refreshToken = async (req, res) => {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error al generar token",
+      code: "REFRESH_TOKEN_ERROR",
     });
   }
 };

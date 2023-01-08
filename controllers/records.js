@@ -14,7 +14,7 @@ const getRecords = async (req, res) => {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error en el servidor",
+      code: "GET_RECORDS_ERROR",
     });
   }
 };
@@ -27,14 +27,14 @@ const newRecord = async (req, res) => {
     const newRecord = await record.save();
     res.status(201).json({
       ok: true,
-      msg: "Record created",
       record: newRecord,
+      code: "RECORD_CREATED",
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error al crear nuevo registro",
+      code: "CREATE_RECORD_ERROR",
     });
   }
 };
@@ -48,12 +48,12 @@ const updateRecord = async (req, res) => {
     if (!record)
       return res.status(404).json({
         ok: false,
-        msg: "El registro no existe",
+        code: "RECORD_NOT_EXISTS",
       });
     if (record.user.toString() !== uid)
       return res.status(401).json({
         ok: false,
-        msg: "No tienes privilegios para editar este registro",
+        code: "UNAUTH_ACTION",
       });
     const newRecord = {
       ...req.body,
@@ -64,14 +64,14 @@ const updateRecord = async (req, res) => {
     });
     res.status(202).json({
       ok: true,
-      msg: "Registro actualizado correctamente",
       record: updatedRecord,
+      code: "RECORD_UPDATED",
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error al actualizar registro",
+      code: "UPDATE_RECORD_ERROR",
     });
   }
 };
@@ -84,23 +84,23 @@ const deleteRecord = async (req, res) => {
     if (!record)
       return res.status(404).json({
         ok: false,
-        msg: "El registro no existe",
+        code: "RECORD_NOT_EXISTS",
       });
     if (record.user.toString() !== uid)
       return res.status(401).json({
         ok: false,
-        msg: "No tienes permisos para eliminar este registro",
+        code: "UNAUTH_ACTION",
       });
     await Record.findByIdAndDelete(recordId);
     res.status(200).json({
       ok: true,
-      msg: "Registro eliminado correctamente.",
+      code: "DELETED_RECORD",
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      msg: "Error en el servidor al eliminar registro. Intente nuevamente.",
+      code: "DELETE_RECORD_ERROR",
     });
   }
 };

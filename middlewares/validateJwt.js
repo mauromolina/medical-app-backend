@@ -5,11 +5,10 @@ const validateJwt = (req, res, next) => {
   if (!token)
     return res.status(401).json({
       ok: false,
-      msg: "Acceso denegado. Se necesita token",
+      code: "NEED_TOKEN",
     });
   try {
     const data = jwt.verify(token, process.env.SECRET_JWT);
-    console.log({ data });
     const { uid, name } = data;
     req.uid = uid;
     req.name = name;
@@ -17,7 +16,7 @@ const validateJwt = (req, res, next) => {
     console.log(err);
     return res.status(500).json({
       ok: false,
-      msg: "Token no valido",
+      code: "INVALID_TOKEN",
     });
   }
   next();
